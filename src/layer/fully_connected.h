@@ -1,15 +1,13 @@
 #ifndef FULLY_CONNECTED_H
 #define FULLY_CONNECTED_H
 
-#include <Eigen/Core>
-#include "utils.h"
-#include "sgd.h"
+#include "../layer.h"
 
-class FullyConnected {
+class FullyConnected: public Layer {
 private:
 	const int dim_in;
 	const int dim_out;
-
+	
 	Matrix weight;  // weight parameter
 	Vector bias;  // bias paramter
 	Matrix grad_weight;  // gradient w.r.t weight
@@ -20,14 +18,15 @@ private:
 	void init();
 
 public:
-	FullyConnected(int dim_in, int dim_out) : dim_in(dim_in), dim_out(dim_out) {
+	FullyConnected(const int dim_in, const int dim_out) : 
+									dim_in(dim_in), dim_out(dim_out) {
 		init();
 	}
 	
 	void forward(const Matrix& bottom);
 	void backward(const Matrix& bottom, const Matrix& grad_top);
-	const Matrix& output();
-	const Matrix& back_gradient();
+	const Matrix& output() { return top; }
+	const Matrix& back_gradient() { return grad_bottom; }
 	void update(SGD& opt);
 };
 

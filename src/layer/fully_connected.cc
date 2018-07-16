@@ -31,14 +31,6 @@ void FullyConnected::backward(const Matrix& bottom, const Matrix& grad_top) {
 	grad_bottom = weight * grad_top;
 }
 
-const Matrix& FullyConnected::output() {
-	return top;
-}
-
-const Matrix& FullyConnected::back_gradient() {
-	return grad_bottom;
-}
-
 void FullyConnected::update (SGD& opt) {
 	Vector::AlignedMapType weight_vec(weight.data(), weight.size());
 	Vector::AlignedMapType bias_vec(bias.data(), bias.size());

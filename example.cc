@@ -1,10 +1,10 @@
 #include <algorithm>
 #include <iostream>
 #include <Eigen/Dense>
-#include "src/fully_connected.h"
+#include "src/layer/fully_connected.h"
 #include "src/mnist.h"
 #include "src/mse_loss.h"
-#include "src/sigmoid.h"
+#include "src/layer/sigmoid.h"
 
 int main()
 {
