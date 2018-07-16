@@ -29,4 +29,16 @@ inline Matrix one_hot_encode(const Matrix& y, const int n_value) {
 	return y_onehot;
 }
 
+// classification accuracy
+inline float compute_accuracy(const Matrix& preditions, const Matrix& labels) {
+	int n = preditions.cols();
+	float acc = 0;
+	for (int i = 0; i < n; i ++) {
+		Matrix::Index max_index;
+		float max_value = preditions.col(i).maxCoeff(&max_index);
+		acc += (int)max_index == labels(i);
+	}
+	return acc / n;
+}
+
 #endif /* UTILS_H */
