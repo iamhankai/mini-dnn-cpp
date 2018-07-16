@@ -1,5 +1,5 @@
 #include "sgd.h"
 
-void SGD::update(Vector::AlignedMapType& x, Vector::ConstAlignedMapType& dx) {
-	x -= lr * dx;
+void SGD::update(Vector::AlignedMapType& w, Vector::ConstAlignedMapType& dw) {
+	w -= lr * (dw + decay * w);
 }

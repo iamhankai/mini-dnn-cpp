@@ -17,9 +17,13 @@ private:
 	Matrix top;  // layer output
 	Matrix grad_bottom;  // gradient w.r.t input
 
-public:
-	FullyConnected(int dim_in, int dim_out) : dim_in(dim_in), dim_out(dim_out) {}
 	void init();
+
+public:
+	FullyConnected(int dim_in, int dim_out) : dim_in(dim_in), dim_out(dim_out) {
+		init();
+	}
+	
 	void forward(const Matrix& bottom);
 	void backward(const Matrix& bottom, const Matrix& grad_top);
 	const Matrix& output();
