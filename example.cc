@@ -7,6 +7,7 @@
 #include "src/network.h"
 #include "src/layer/fully_connected.h"
 #include "src/layer/sigmoid.h"
+#include "src/layer/softmax.h"
 #include "src/loss/mse_loss.h"
 
 int main()
@@ -24,11 +25,11 @@ int main()
   Layer* fc1 = new FullyConnected(dim_in, 128);
   Layer* sig1 = new Sigmoid;
   Layer* fc2 = new FullyConnected(128, 10);
-  Layer* sig2 = new Sigmoid;
+  Layer* softmax = new Softmax;
   dnn.add_layer(fc1);
   dnn.add_layer(sig1);
   dnn.add_layer(fc2);
-  dnn.add_layer(sig2);
+  dnn.add_layer(softmax);
   // loss
   Loss* loss = new MSE;
   dnn.add_loss(loss);

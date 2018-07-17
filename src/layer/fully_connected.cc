@@ -1,5 +1,4 @@
 #include "fully_connected.h"
-#include <iostream>
 
 void FullyConnected::init() {
 	weight.resize(dim_in, dim_out);
@@ -8,8 +7,6 @@ void FullyConnected::init() {
 	grad_bias.resize(dim_out);
 	set_normal_random(weight.data(), weight.size(), 0, 0.01);
 	set_normal_random(bias.data(), bias.size(), 0, 0.01);
-	//std::cout << weight << std::endl;
-	//std::cout << bias << std::endl;
 }
 
 void FullyConnected::forward(const Matrix& bottom) {
