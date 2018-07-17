@@ -12,3 +12,5 @@ make
 ```
 
 Run `./demo`.
+
+Result: simple neural network with 3 FC layers can obtain `0.97+` accuracy on MNIST testset.
