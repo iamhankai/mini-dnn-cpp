@@ -8,6 +8,7 @@
 
 typedef Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> Matrix;
 typedef Eigen::Matrix<float, Eigen::Dynamic, 1> Vector;
+typedef Eigen::Array<float, 1, Eigen::Dynamic> RowVector;
 
 static std::default_random_engine generator;
 

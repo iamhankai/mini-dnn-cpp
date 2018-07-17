@@ -1,12 +1,12 @@
-#ifndef SIGMOID_H
-#define SIGMOID_H
+#ifndef SOFTMAX_H
+#define SOFTMAX_H
 
 #include "../layer.h"
 
-class Sigmoid: public Layer {
+class Softmax: public Layer {
 public:
 	void forward(const Matrix& bottom);
 	void backward(const Matrix& bottom, const Matrix& grad_top);
 };
 
-#endif /* SIGMOID_H */
+#endif /* SOFTMAX_H */

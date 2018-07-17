@@ -17,7 +17,7 @@ public:
 	virtual void backward(const Matrix& bottom, const Matrix& grad_top) = 0;
 	virtual const Matrix& output() { return top; }
 	virtual const Matrix& back_gradient() { return grad_bottom; }
-	virtual void update(SGD& opt) = 0;
+	virtual void update(SGD& opt) {}
 };
 
 #endif /* LAYER_H */
