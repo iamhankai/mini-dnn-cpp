@@ -26,11 +26,6 @@ void MNIST::read_mnist_data(std::string filename, Matrix& data) {
 		n_rows = ReverseInt(n_rows);
 		n_cols = ReverseInt(n_cols);
 
-		std::cout << "magic number = " << magic_number << std::endl;
-		std::cout << "number of images = " << number_of_images << std::endl;
-		std::cout << "rows = " << n_rows << std::endl;
-		std::cout << "cols = " << n_cols << std::endl;
-
 		data.resize(n_cols * n_rows, number_of_images);
 		for (int i = 0; i < number_of_images; i++) {
 			for (int r = 0; r < n_rows; r++) {
@@ -53,8 +48,6 @@ void MNIST::read_mnist_label(std::string filename, Matrix& labels) {
 		file.read((char*)&number_of_images, sizeof(number_of_images));
 		magic_number = ReverseInt(magic_number);
 		number_of_images = ReverseInt(number_of_images);
-		std::cout << "magic number = " << magic_number << std::endl;
-		std::cout << "number of images = " << number_of_images << std::endl;
 
 		labels.resize(1, number_of_images);
 		for (int i = 0; i < number_of_images; i++) {
