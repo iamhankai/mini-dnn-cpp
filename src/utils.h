@@ -1,6 +1,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <algorithm>
+#include <iostream>
 #include <Eigen/Core>
 #include <random>
 
@@ -12,11 +14,19 @@ static std::default_random_engine generator;
 // Normal distribution: N(mu, sigma^2)
 inline void set_normal_random(float* arr, const int n, const float mu, 
 												const float sigma) {
-
 	std::normal_distribution<float> distribution(mu, sigma);
 	for (int i = 0; i < n; i ++) {
 		arr[i] = distribution(generator);
 	}
+}
+
+// shuffle cols of matrix
+inline void shuffle_data(Matrix& data, Matrix& labels) {
+	Eigen::PermutationMatrix<Eigen::Dynamic, Eigen::Dynamic> perm(data.cols());
+	perm.setIdentity();
+	std::random_shuffle(perm.indices().data(), perm.indices().data()+perm.indices().size());
+	data = data * perm; // permute columns
+	labels = labels * perm;
 }
 
 // encode discrete values to one-hot values

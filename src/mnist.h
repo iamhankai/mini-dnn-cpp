@@ -7,8 +7,10 @@
 #include "utils.h"
 
 class MNIST {
-public:
+private:
 	std::string data_dir;
+
+public:
 	Matrix train_data;
 	Matrix train_labels;
 	Matrix test_data;
