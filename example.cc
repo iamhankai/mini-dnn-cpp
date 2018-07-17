@@ -10,6 +10,7 @@
 #include "src/layer/sigmoid.h"
 #include "src/layer/softmax.h"
 #include "src/loss/mse_loss.h"
+#include "src/loss/cross_entropy_loss.h"
 
 int main()
 {
@@ -18,9 +19,8 @@ int main()
   dataset.read();
   int n_train = dataset.train_data.cols();
   int dim_in = dataset.train_data.rows();
-  const int batch_size = 32;
-  std::cout << "mnist: " << n_train << std::endl;
-  std::cout << dataset.test_labels.cols() << std::endl;
+  std::cout << "mnist train number: " << n_train << std::endl;
+  std::cout << "mnist test number: " << dataset.test_labels.cols() << std::endl;
   // dnn
   Network dnn;
   Layer* fc1 = new FullyConnected(dim_in, 128);
@@ -36,11 +36,12 @@ int main()
   dnn.add_layer(fc3);
   dnn.add_layer(softmax);
   // loss
-  Loss* loss = new MSE;
+  Loss* loss = new CrossEntropy;
   dnn.add_loss(loss);
   // train & test
-  SGD opt(0.01, 0.0001);
+  SGD opt(0.01, 1e-4);
   const int n_epoch = 5;
+  const int batch_size = 128;
   for (int epoch = 0; epoch < n_epoch; epoch ++) {
     shuffle_data(dataset.train_data, dataset.train_labels);
     for (int start_idx = 0; start_idx < n_train; start_idx += batch_size) {
@@ -62,7 +63,9 @@ int main()
     // test
     dnn.forward(dataset.test_data);
     float acc = compute_accuracy(dnn.output(), dataset.test_labels);
+    std::cout << std::endl;
     std::cout << epoch + 1 << "-th epoch, test acc: " << acc << std::endl;
+    std::cout << std::endl;
   }
   return 0;
 }
