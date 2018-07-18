@@ -23,7 +23,7 @@ public:
 	
 	void forward(const Matrix& bottom);
 	void backward(const Matrix& bottom, const Matrix& grad_top);
-	void update(SGD& opt);
+	void update(Optimizer& opt);
 };
 
 #endif /* FULLY_CONNECTED_H */

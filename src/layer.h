@@ -3,7 +3,7 @@
 
 #include <Eigen/Core>
 #include "utils.h"
-#include "sgd.h"
+#include "optimizer.h"
 
 class Layer {
 protected:
@@ -17,7 +17,7 @@ public:
 	virtual void backward(const Matrix& bottom, const Matrix& grad_top) = 0;
 	virtual const Matrix& output() { return top; }
 	virtual const Matrix& back_gradient() { return grad_bottom; }
-	virtual void update(SGD& opt) {}
+	virtual void update(Optimizer& opt) {}
 };
 
 #endif /* LAYER_H */

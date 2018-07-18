@@ -5,12 +5,14 @@
 #include "src/loss.h"
 #include "src/mnist.h"
 #include "src/network.h"
+#include "src/optimizer.h"
 #include "src/layer/fully_connected.h"
 #include "src/layer/relu.h"
 #include "src/layer/sigmoid.h"
 #include "src/layer/softmax.h"
 #include "src/loss/mse_loss.h"
 #include "src/loss/cross_entropy_loss.h"
+#include "src/optimizer/sgd.h"
 
 int main()
 {
@@ -39,7 +41,7 @@ int main()
   Loss* loss = new CrossEntropy;
   dnn.add_loss(loss);
   // train & test
-  SGD opt(0.01, 1e-4);
+  SGD opt(0.001, 1e-4, 0.9, true);
   const int n_epoch = 5;
   const int batch_size = 128;
   for (int epoch = 0; epoch < n_epoch; epoch ++) {

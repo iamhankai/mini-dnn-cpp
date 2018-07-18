@@ -4,6 +4,7 @@
 #include <vector>
 #include "layer.h"
 #include "loss.h"
+#include "optimizer.h"
 #include "utils.h"
 
 class Network {
@@ -27,7 +28,7 @@ public:
 
 	void forward(const Matrix& input);
 	void backward(const Matrix& input, const Matrix& target);
-	void update(SGD& opt);
+	void update(Optimizer& opt);
 
 	const Matrix& output() { return layers.back()->output(); }
 	float get_loss() { return loss->output(); }
