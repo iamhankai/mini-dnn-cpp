@@ -28,7 +28,7 @@ void Network::backward(const Matrix& input, const Matrix& target) {
 	layers[0]->backward(input, layers[1]->back_gradient());
 }
 
-void Network::update(SGD& opt) {
+void Network::update(Optimizer& opt) {
 	for (int i = 0; i < layers.size(); i ++) {
 		layers[i]->update(opt);
 	}
