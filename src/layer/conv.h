@@ -15,7 +15,7 @@ private:
 	int height_kernel;
 	int width_kernel;
 	int stride;
-	bool padding; // have not used yet
+	bool padding; // not support yet
 
 	int height_out;
 	int width_out;
