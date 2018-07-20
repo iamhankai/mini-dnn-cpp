@@ -6,6 +6,7 @@
 #include "src/mnist.h"
 #include "src/network.h"
 #include "src/optimizer.h"
+#include "src/layer/conv.h"
 #include "src/layer/fully_connected.h"
 #include "src/layer/relu.h"
 #include "src/layer/sigmoid.h"
@@ -16,6 +17,19 @@
 
 int main()
 {
+  Matrix m = Matrix::Ones(16,1);
+  for (int i=1; i<=16; i++) {
+    m(i-1, 0) = i;
+  }
+  Vector v = m.col(0);
+  std::cout << v << std::endl;
+  // Conv 
+  Conv conv(1, 4, 4, 1, 3, 3, 2);
+  Matrix data_col;
+  conv.forward(m);
+  std::cout << conv.output() << std::endl;
+  Matrix dm = Matrix::Ones(4,1);
+  conv.backward(m, dm);
   // data
   MNIST dataset("../data/mnist/");
   dataset.read();
@@ -25,38 +39,49 @@ int main()
   std::cout << "mnist test number: " << dataset.test_labels.cols() << std::endl;
   // dnn
   Network dnn;
+  Layer* conv1 = new Conv(1, 28, 28, 2, 5, 5, 2);
+  Layer* conv2 = new Conv(2, 13, 13, 4, 3, 3, 2);
+  Layer* conv3 = new Conv(4, 6, 6, 8, 2, 2, 1);
   Layer* fc1 = new FullyConnected(dim_in, 128);
   Layer* fc2 = new FullyConnected(128, 32);
-  Layer* fc3 = new FullyConnected(32, 10);
+  Layer* fc4 = new FullyConnected(conv3->output_dim(), 10);
   Layer* relu1 = new ReLU;
   Layer* relu2 = new ReLU;
+  Layer* relu3 = new ReLU;
   Layer* softmax = new Softmax;
-  dnn.add_layer(fc1);
+  dnn.add_layer(conv1);
   dnn.add_layer(relu1);
-  dnn.add_layer(fc2);
+  dnn.add_layer(conv2);
   dnn.add_layer(relu2);
-  dnn.add_layer(fc3);
+  dnn.add_layer(conv3);
+  dnn.add_layer(relu3);
+  dnn.add_layer(fc4);
   dnn.add_layer(softmax);
   // loss
   Loss* loss = new CrossEntropy;
   dnn.add_loss(loss);
   // train & test
   SGD opt(0.001, 1e-4, 0.9, true);
+  //SGD opt(0.001);
   const int n_epoch = 5;
   const int batch_size = 128;
   for (int epoch = 0; epoch < n_epoch; epoch ++) {
     shuffle_data(dataset.train_data, dataset.train_labels);
     for (int start_idx = 0; start_idx < n_train; start_idx += batch_size) {
+      int ith_batch = start_idx / batch_size;
       Matrix x_batch = dataset.train_data.block(0, start_idx, dim_in, 
                                         std::min(batch_size, n_train - start_idx));
       Matrix label_batch = dataset.train_labels.block(0, start_idx, 1, 
                                         std::min(batch_size, n_train - start_idx));
       Matrix target_batch = one_hot_encode(label_batch, 10);
+      if (false && ith_batch % 100 == 0){
+        std::cout << ith_batch << "-th grad: " << std::endl;
+        dnn.check_gradient(x_batch, target_batch, 10);
+      }
       dnn.forward(x_batch);
       dnn.backward(x_batch, target_batch);
 
-      int ith_batch = start_idx / batch_size;
-      if((ith_batch % 50) == 0){
+      if(ith_batch % 50 == 0){
         std::cout << ith_batch << "-th batch, loss: " << dnn.get_loss() << std::endl;
       }
 

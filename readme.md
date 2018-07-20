@@ -13,4 +13,6 @@ make
 
 Run `./demo`.
 
-Result: simple neural network with 3 FC layers can obtain `0.97+` accuracy on MNIST testset.
+Result: 
+simple neural network with 3 FC layers can obtain `0.97+` accuracy on MNIST testset.
+simple CNN with 3 Conv layers can obtain `~0.97` accuracy on MNIST testset.
