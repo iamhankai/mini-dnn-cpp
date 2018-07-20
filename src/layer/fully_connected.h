@@ -24,6 +24,10 @@ public:
 	void forward(const Matrix& bottom);
 	void backward(const Matrix& bottom, const Matrix& grad_top);
 	void update(Optimizer& opt);
+	int output_dim() { return dim_out; }
+	std::vector<float> get_parameters() const;
+	std::vector<float> get_derivatives() const;
+	void set_parameters(const std::vector<float>& param);
 };
 
 #endif /* FULLY_CONNECTED_H */
