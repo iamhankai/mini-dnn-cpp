@@ -8,6 +8,7 @@
 #include "src/optimizer.h"
 #include "src/layer/conv.h"
 #include "src/layer/fully_connected.h"
+#include "src/layer/max_pooling.h"
 #include "src/layer/relu.h"
 #include "src/layer/sigmoid.h"
 #include "src/layer/softmax.h"
@@ -39,21 +40,23 @@ int main()
   std::cout << "mnist test number: " << dataset.test_labels.cols() << std::endl;
   // dnn
   Network dnn;
-  Layer* conv1 = new Conv(1, 28, 28, 2, 5, 5, 2);
-  Layer* conv2 = new Conv(2, 13, 13, 4, 3, 3, 2);
-  Layer* conv3 = new Conv(4, 6, 6, 8, 2, 2, 1);
-  Layer* fc1 = new FullyConnected(dim_in, 128);
-  Layer* fc2 = new FullyConnected(128, 32);
-  Layer* fc4 = new FullyConnected(conv3->output_dim(), 10);
+  Layer* conv1 = new Conv(1, 28, 28, 4, 5, 5, 1);
+  Layer* pool1 = new MaxPooling(4, 24, 24, 2, 2, 2);
+  Layer* conv2 = new Conv(4, 12, 12, 8, 5, 5, 1);
+  Layer* pool2 = new MaxPooling(8, 8, 8, 2, 2, 2);
+  Layer* fc3 = new FullyConnected(pool2->output_dim(), 32);
+  Layer* fc4 = new FullyConnected(32, 10);
   Layer* relu1 = new ReLU;
   Layer* relu2 = new ReLU;
   Layer* relu3 = new ReLU;
   Layer* softmax = new Softmax;
   dnn.add_layer(conv1);
   dnn.add_layer(relu1);
+  dnn.add_layer(pool1);
   dnn.add_layer(conv2);
   dnn.add_layer(relu2);
-  dnn.add_layer(conv3);
+  dnn.add_layer(pool2);
+  dnn.add_layer(fc3);
   dnn.add_layer(relu3);
   dnn.add_layer(fc4);
   dnn.add_layer(softmax);
@@ -61,7 +64,7 @@ int main()
   Loss* loss = new CrossEntropy;
   dnn.add_loss(loss);
   // train & test
-  SGD opt(0.001, 1e-4, 0.9, true);
+  SGD opt(0.001, 5e-4, 0.9, true);
   //SGD opt(0.001);
   const int n_epoch = 5;
   const int batch_size = 128;
@@ -74,7 +77,7 @@ int main()
       Matrix label_batch = dataset.train_labels.block(0, start_idx, 1, 
                                         std::min(batch_size, n_train - start_idx));
       Matrix target_batch = one_hot_encode(label_batch, 10);
-      if (false && ith_batch % 100 == 0){
+      if (false && ith_batch % 100 == 1){
         std::cout << ith_batch << "-th grad: " << std::endl;
         dnn.check_gradient(x_batch, target_batch, 10);
       }
