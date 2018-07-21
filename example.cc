@@ -18,19 +18,6 @@
 
 int main()
 {
-  Matrix m = Matrix::Ones(16,1);
-  for (int i=1; i<=16; i++) {
-    m(i-1, 0) = i;
-  }
-  Vector v = m.col(0);
-  std::cout << v << std::endl;
-  // Conv 
-  Conv conv(1, 4, 4, 1, 3, 3, 2);
-  Matrix data_col;
-  conv.forward(m);
-  std::cout << conv.output() << std::endl;
-  Matrix dm = Matrix::Ones(4,1);
-  conv.backward(m, dm);
   // data
   MNIST dataset("../data/mnist/");
   dataset.read();
