@@ -8,6 +8,7 @@
 #include "src/optimizer.h"
 #include "src/layer/conv.h"
 #include "src/layer/fully_connected.h"
+#include "src/layer/ave_pooling.h"
 #include "src/layer/max_pooling.h"
 #include "src/layer/relu.h"
 #include "src/layer/sigmoid.h"
@@ -30,7 +31,7 @@ int main()
   Layer* conv1 = new Conv(1, 28, 28, 4, 5, 5, 1);
   Layer* pool1 = new MaxPooling(4, 24, 24, 2, 2, 2);
   Layer* conv2 = new Conv(4, 12, 12, 8, 5, 5, 1);
-  Layer* pool2 = new MaxPooling(8, 8, 8, 2, 2, 2);
+  Layer* pool2 = new AvePooling(8, 8, 8, 2, 2, 2);
   Layer* fc3 = new FullyConnected(pool2->output_dim(), 32);
   Layer* fc4 = new FullyConnected(32, 10);
   Layer* relu1 = new ReLU;
@@ -64,7 +65,7 @@ int main()
       Matrix label_batch = dataset.train_labels.block(0, start_idx, 1, 
                                         std::min(batch_size, n_train - start_idx));
       Matrix target_batch = one_hot_encode(label_batch, 10);
-      if (false && ith_batch % 100 == 1){
+      if (false && ith_batch % 10 == 1){
         std::cout << ith_batch << "-th grad: " << std::endl;
         dnn.check_gradient(x_batch, target_batch, 10);
       }
