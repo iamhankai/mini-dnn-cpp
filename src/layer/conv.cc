@@ -3,8 +3,8 @@
 #include <iostream>
 
 void Conv::init() {
-	height_out = (1 + std::ceil((height_in - height_kernel) * 1.0 / stride));
-	width_out =	 (1 + std::ceil((width_in - width_kernel) * 1.0 / stride));
+	height_out = (1 + (height_in - height_kernel + 2 * pad_h) / stride);
+	width_out =	 (1 + (width_in - width_kernel + 2 * pad_w) / stride);
 	dim_out = height_out * width_out * channel_out;
 
 	weight.resize(channel_in * height_kernel * width_kernel, channel_out);
@@ -33,12 +33,15 @@ void Conv::im2col(const Vector& image, Matrix& data_col) {
 			int step_w = i % width_out;
 			int start_idx = step_h * width_in * stride + step_w * stride;  // left-top idx of window
 			for (int j = 0; j < hw_kernel; j ++) {
-				if (start_idx % width_in + j % width_kernel >= width_in ||
-						start_idx / width_in + j / width_kernel >= height_in) {
+				int cur_col = start_idx % width_in + j % width_kernel - pad_w;  // col after padding
+				int cur_row = start_idx / width_in + j / width_kernel - pad_h;
+				if (cur_col < 0 || cur_col >= width_in || cur_row < 0 ||
+						cur_row >= height_in) {
 					data_col(i, c * hw_kernel + j) = 0;
 				}
 				else {
-					int pick_idx = start_idx + (j / width_kernel) * width_in + j % width_kernel;
+					//int pick_idx = start_idx + (j / width_kernel) * width_in + j % width_kernel;
+					int pick_idx = cur_row * width_in + cur_col;
 					data_col(i, c * hw_kernel + j) = map(pick_idx);  // pick which pixel
 				}
 			}
@@ -78,12 +81,15 @@ void Conv::col2im(const Matrix& data_col, Vector& image) {
 			int step_w = i % width_out;
 			int start_idx = step_h * width_in * stride + step_w * stride;  // left-top idx of window
 			for (int j = 0; j < hw_kernel; j ++) {
-				if (start_idx % width_in + j % width_kernel >= width_in ||
-						start_idx / width_in + j / width_kernel >= height_in) {
+				int cur_col = start_idx % width_in + j % width_kernel - pad_w;  // col after padding
+				int cur_row = start_idx / width_in + j / width_kernel - pad_h;
+				if (cur_col < 0 || cur_col >= width_in || cur_row < 0 ||
+						cur_row >= height_in) {
 					continue;
 				}
 				else {
-					int pick_idx = start_idx + (j / width_kernel) * width_in + j % width_kernel;
+					//int pick_idx = start_idx + (j / width_kernel) * width_in + j % width_kernel;
+					int pick_idx = cur_row * width_in + cur_col;
 					image(c * hw_in + pick_idx) += data_col(i, c * hw_kernel + j);  // pick which pixel
 				}
 			}

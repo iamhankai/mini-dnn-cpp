@@ -28,10 +28,10 @@ int main()
   std::cout << "mnist test number: " << dataset.test_labels.cols() << std::endl;
   // dnn
   Network dnn;
-  Layer* conv1 = new Conv(1, 28, 28, 4, 5, 5, 1);
-  Layer* pool1 = new MaxPooling(4, 24, 24, 2, 2, 2);
-  Layer* conv2 = new Conv(4, 12, 12, 8, 5, 5, 1);
-  Layer* pool2 = new AvePooling(8, 8, 8, 2, 2, 2);
+  Layer* conv1 = new Conv(1, 28, 28, 4, 5, 5, 2, 2, 2);
+  Layer* pool1 = new MaxPooling(4, 14, 14, 2, 2, 2);
+  Layer* conv2 = new Conv(4, 7, 7, 16, 5, 5, 1, 2, 2);
+  Layer* pool2 = new AvePooling(16, 7, 7, 2, 2, 2);
   Layer* fc3 = new FullyConnected(pool2->output_dim(), 32);
   Layer* fc4 = new FullyConnected(32, 10);
   Layer* relu1 = new ReLU;
