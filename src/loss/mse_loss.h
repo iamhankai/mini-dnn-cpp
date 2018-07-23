@@ -1,11 +1,11 @@
-#ifndef MSE_LOSS_H
-#define MSE_LOSS_H
+#ifndef SRC_LOSS_MSE_LOSS_H_
+#define SRC_LOSS_MSE_LOSS_H_
 
 #include "../loss.h"
 
 class MSE: public Loss {
-public:
-	void evaluate(const Matrix& pred, const Matrix& target);
+ public:
+  void evaluate(const Matrix& pred, const Matrix& target);
 };
 
-#endif /* MSE_LOSS_H */
+#endif  // SRC_LOSS_MSE_LOSS_H_

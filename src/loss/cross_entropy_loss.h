@@ -1,11 +1,11 @@
-#ifndef CROSS_ENTROPY_LOSS_H
-#define CROSS_ENTROPY_LOSS_H
+#ifndef SRC_LOSS_CROSS_ENTROPY_LOSS_H_
+#define SRC_LOSS_CROSS_ENTROPY_LOSS_H_
 
 #include "../loss.h"
 
 class CrossEntropy: public Loss {
-public:
-	void evaluate(const Matrix& pred, const Matrix& target);
+ public:
+  void evaluate(const Matrix& pred, const Matrix& target);
 };
 
-#endif /* CROSS_ENTROPY_LOSS_H */
+#endif  // SRC_LOSS_CROSS_ENTROPY_LOSS_H_

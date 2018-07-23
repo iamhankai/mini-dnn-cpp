@@ -7,11 +7,8 @@
 #include <Eigen/Dense>
 #include <algorithm>
 #include <iostream>
+
 #include "src/layer.h"
-#include "src/loss.h"
-#include "src/mnist.h"
-#include "src/network.h"
-#include "src/optimizer.h"
 #include "src/layer/conv.h"
 #include "src/layer/fully_connected.h"
 #include "src/layer/ave_pooling.h"
@@ -19,9 +16,14 @@
 #include "src/layer/relu.h"
 #include "src/layer/sigmoid.h"
 #include "src/layer/softmax.h"
+#include "src/loss.h"
 #include "src/loss/mse_loss.h"
 #include "src/loss/cross_entropy_loss.h"
+#include "src/mnist.h"
+#include "src/network.h"
+#include "src/optimizer.h"
 #include "src/optimizer/sgd.h"
+
 
 int main() {
   // data
@@ -36,7 +38,7 @@ int main() {
   Layer* conv1 = new Conv(1, 28, 28, 4, 5, 5, 2, 2, 2);
   Layer* pool1 = new MaxPooling(4, 14, 14, 2, 2, 2);
   Layer* conv2 = new Conv(4, 7, 7, 16, 5, 5, 1, 2, 2);
-  Layer* pool2 = new AvePooling(16, 7, 7, 2, 2, 2);
+  Layer* pool2 = new MaxPooling(16, 7, 7, 2, 2, 2);
   Layer* fc3 = new FullyConnected(pool2->output_dim(), 32);
   Layer* fc4 = new FullyConnected(32, 10);
   Layer* relu1 = new ReLU;
@@ -76,12 +78,12 @@ int main() {
       }
       dnn.forward(x_batch);
       dnn.backward(x_batch, target_batch);
-
+      // display
       if (ith_batch % 50 == 0) {
         std::cout << ith_batch << "-th batch, loss: " << dnn.get_loss()
         << std::endl;
       }
-
+      // optimize
       dnn.update(opt);
     }
     // test
