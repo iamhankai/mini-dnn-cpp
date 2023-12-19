@@ -24,12 +24,16 @@
 #include "src/optimizer.h"
 #include "src/optimizer/sgd.h"
 
+#include "src/device/Util.h"
 
 int main() {
+  GpuTimer timer;
+  timer.Start();
+
   // data
   MNIST dataset("../data/mnist/");
   dataset.read();
-  int n_train = dataset.train_data.cols();
+  int n_train = dataset.train_data.cols();if (n_train >= 200) n_train = 200;
   int dim_in = dataset.train_data.rows();
   std::cout << "mnist train number: " << n_train << std::endl;
   std::cout << "mnist test number: " << dataset.test_labels.cols() << std::endl;
@@ -61,7 +65,7 @@ int main() {
   // train & test
   SGD opt(0.001, 5e-4, 0.9, true);
   // SGD opt(0.001);
-  const int n_epoch = 5;
+  const int n_epoch = 1;
   const int batch_size = 128;
   for (int epoch = 0; epoch < n_epoch; epoch ++) {
     shuffle_data(dataset.train_data, dataset.train_labels);
@@ -93,6 +97,11 @@ int main() {
     std::cout << epoch + 1 << "-th epoch, test acc: " << acc << std::endl;
     std::cout << std::endl;
   }
+
+  timer.Stop();
+  float time = timer.Elapsed();
+  printf("Processing time: %f ms\n");
+
   return 0;
 }
 
