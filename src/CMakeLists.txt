@@ -7,3 +7,5 @@ aux_source_directory(./optimizer DIR_LIB_SRCS)
 # 生成链接库
 add_library (MiniDNNLib ${DIR_LIB_SRCS})
 
+aux_source_directory(./device DIR_DEV_LIB_SRCS)
+add_library (DeviceLib ${DIR_DEV_LIB_SRCS})

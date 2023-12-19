@@ -14,4 +14,5 @@ file(GLOB_RECURSE CUDA_SOURCES "src/device/*.cu")
 cuda_add_executable(main ${CUDA_SOURCES} ${DIR_SRCS})
 
 target_link_libraries(main MiniDNNLib)
+target_link_libraries(main DeviceLib)
 target_link_libraries(main ${CUDA_LIBRARIES})
