@@ -1,5 +1,5 @@
-cmake_minimum_required (VERSION 3.0)
-project(myproject CUDA)  # Specify CUDA for the project
+cmake_minimum_required (VERSION 3.1)
+project(myproject LANGUAGES CXX CUDA)  # Specify CUDA for the project
 
 include_directories ("${PROJECT_SOURCE_DIR}/third_party/eigen")
 
