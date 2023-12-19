@@ -100,7 +100,7 @@ int main() {
 
   timer.Stop();
   float time = timer.Elapsed();
-  printf("Processing time: %f ms\n");
+  printf("Processing time: %f ms\n", time);
 
   return 0;
 }
