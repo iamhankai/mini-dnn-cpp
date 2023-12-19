@@ -1,18 +1,17 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required (VERSION 3.0)
+project(myproject CUDA)  # Specify CUDA for the project
 
-project(Lenet5App LANGUAGES CXX CUDA)
+include_directories ("${PROJECT_SOURCE_DIR}/third_party/eigen")
 
-# CUDA-specific settings
+# Find CUDA package
 find_package(CUDA REQUIRED)
 include_directories(${CUDA_INCLUDE_DIRS})
 
-# Set C++ standard
-set(CMAKE_CXX_STANDARD 11)
+aux_source_directory(. DIR_SRCS)
+add_subdirectory(src)
+file(GLOB_RECURSE CUDA_SOURCES "src/device/*.cu")
 
-# Add your CUDA and C++ source files
-file(GLOB CUDA_SOURCES *.cu)
-file(GLOB CPP_SOURCES *.cpp)
+cuda_add_executable(main ${CUDA_SOURCES} ${DIR_SRCS})
 
-# Add executable and link CUDA libraries
-cuda_add_executable(lenet5_app ${CUDA_SOURCES} ${CPP_SOURCES})
-target_link_libraries(lenet5_app ${CUDA_LIBRARIES})
+target_link_libraries(main MiniDNNLib)
+target_link_libraries(main ${CUDA_LIBRARIES})
