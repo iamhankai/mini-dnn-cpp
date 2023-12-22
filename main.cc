@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
     // train & test
     SGD opt(0.001, 5e-4, 0.9, true);
     // SGD opt(0.001);
-    const int n_epoch = 4;
+    const int n_epoch = 5;
     const int batch_size = 128;
     for (int epoch = 0; epoch < n_epoch; epoch ++) {
       shuffle_data(dataset.train_data, dataset.train_labels);
@@ -106,6 +106,12 @@ int main(int argc, char *argv[]) {
       std::cout << std::endl;
       std::cout << epoch + 1 << "-th epoch, test acc: " << acc << std::endl;
       std::cout << std::endl;
+      // save parameters
+      storeParametersToFile("ep_"+std::to_string(epoch+1)+"_"+std::to_string(acc)+"_conv1.txt", conv1->get_parameters());
+      storeParametersToFile("ep_"+std::to_string(epoch+1)+"_"+std::to_string(acc)+"_conv2.txt", conv2->get_parameters());
+      storeParametersToFile("ep_"+std::to_string(epoch+1)+"_"+std::to_string(acc)+"_fc3.txt", fc3->get_parameters());
+      storeParametersToFile("ep_"+std::to_string(epoch+1)+"_"+std::to_string(acc)+"_fc4.txt", fc4->get_parameters());
+      storeParametersToFile("ep_"+std::to_string(epoch+1)+"_"+std::to_string(acc)+"_fc5.txt", fc5->get_parameters());
     }
   } else {
     // load parameters
