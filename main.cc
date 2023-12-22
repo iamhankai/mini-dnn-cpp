@@ -68,10 +68,15 @@ int main() {
   std::vector<float> fc3Parameters = loadParametersFromFile("../parameters/fc3.txt");
   std::vector<float> fc4Parameters = loadParametersFromFile("../parameters/fc4.txt");
   std::vector<float> fc5Parameters = loadParametersFromFile("../parameters/fc5.txt");
+  std::cout << "conv1 paramters: " << conv1Parameters.size() << std::endl;
   conv1->set_parameters(conv1Parameters);
+  std::cout << "conv2 paramters: " << conv2Parameters.size() << std::endl;
   conv2->set_parameters(conv2Parameters);
+  std::cout << "fc3 paramters: " << fc3Parameters.size() << std::endl;
   fc3->set_parameters(fc3Parameters);
+  std::cout << "fc4 paramters: " << fc4Parameters.size() << std::endl;
   fc4->set_parameters(fc4Parameters);
+  std::cout << "fc5 paramters: " << fc5Parameters.size() << std::endl;
   fc5->set_parameters(fc5Parameters);
 
   // Test (Run forward)
