@@ -107,11 +107,11 @@ int main(int argc, char *argv[]) {
       std::cout << epoch + 1 << "-th epoch, test acc: " << acc << std::endl;
       std::cout << std::endl;
       // save parameters
-      storeParametersToFile("ep_"+std::to_string(epoch+1)+"_"+std::to_string(acc)+"_conv1.txt", conv1->get_parameters());
-      storeParametersToFile("ep_"+std::to_string(epoch+1)+"_"+std::to_string(acc)+"_conv2.txt", conv2->get_parameters());
-      storeParametersToFile("ep_"+std::to_string(epoch+1)+"_"+std::to_string(acc)+"_fc3.txt", fc3->get_parameters());
-      storeParametersToFile("ep_"+std::to_string(epoch+1)+"_"+std::to_string(acc)+"_fc4.txt", fc4->get_parameters());
-      storeParametersToFile("ep_"+std::to_string(epoch+1)+"_"+std::to_string(acc)+"_fc5.txt", fc5->get_parameters());
+      storeParametersToFile("../parameters/ep_"+std::to_string(epoch+1)+"_"+std::to_string(acc)+"_conv1.txt", conv1->get_parameters());
+      storeParametersToFile("../parameters/ep_"+std::to_string(epoch+1)+"_"+std::to_string(acc)+"_conv2.txt", conv2->get_parameters());
+      storeParametersToFile("../parameters/ep_"+std::to_string(epoch+1)+"_"+std::to_string(acc)+"_fc3.txt", fc3->get_parameters());
+      storeParametersToFile("../parameters/ep_"+std::to_string(epoch+1)+"_"+std::to_string(acc)+"_fc4.txt", fc4->get_parameters());
+      storeParametersToFile("../parameters/ep_"+std::to_string(epoch+1)+"_"+std::to_string(acc)+"_fc5.txt", fc5->get_parameters());
     }
   } else {
     // load parameters
