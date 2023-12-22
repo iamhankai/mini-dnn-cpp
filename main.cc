@@ -79,6 +79,15 @@ int main() {
   std::cout << "fc5 paramters: " << fc5Parameters.size() << std::endl;
   fc5->set_parameters(fc5Parameters);
 
+  for (int i = 0; i < 5; i++) {
+    std::cout << conv1Parameters[i] << " ";
+  }
+  std::cout << std::endl;
+  for (int i = 0; i < 5; i++) {
+    std::cout << fc5Parameters[i] << " ";
+  }
+  std::cout << std::endl;
+
   // Test (Run forward)
   dnn.forward(dataset.test_data);
   float acc = compute_accuracy(dnn.output(), dataset.test_labels);
