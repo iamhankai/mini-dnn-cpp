@@ -65,6 +65,10 @@ int main(int argc, char *argv[]) {
   dnn.add_layer(softmax);
 
   if (isTraining) {
+    int n_train = dataset.train_data.cols();
+    int dim_in = dataset.train_data.rows();
+    std::cout << "MNIST train number: " << n_train << std::endl;
+    std::cout << "MNIST test number: " << dataset.test_labels.cols() << std::endl;
     // loss
     Loss* loss = new CrossEntropy;
     dnn.add_loss(loss);
