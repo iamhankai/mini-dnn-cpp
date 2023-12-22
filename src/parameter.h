@@ -6,6 +6,6 @@
 #include <fstream>
 
 std::vector<float> loadParametersFromFile(std::string filename);
-void storeParametersToFile(std::string filename, std::vector<float>& parameters);
+void storeParametersToFile(std::string filename, std::vector<float> parameters);
 
 #endif

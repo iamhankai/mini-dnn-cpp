@@ -22,7 +22,7 @@ std::vector<float> loadParametersFromFile(std::string filename) {
   return parameters;
 }
 
-void storeParametersToFile(std::string filename, std::vector<float>& parameters) {
+void storeParametersToFile(std::string filename, std::vector<float> parameters) {
   std::ofstream file(filename);
   if (file.is_open()) {
     file << (parameters.size()) << std::endl;
