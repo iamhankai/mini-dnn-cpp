@@ -32,6 +32,7 @@ int main(int argc, char *argv[]) {
   printDeviceInfo();
 
   bool isTraining = (argc > 1 && (strcmp(argv[1], "train") == 0));
+  bool loadParamFromFile = (argc > 2 && (strcmp(argv[2], "param") == 0));
 
   // Load Fashion MNIST dataset
   MNIST dataset("../data/mnist/");
@@ -63,6 +64,24 @@ int main(int argc, char *argv[]) {
   dnn.add_layer(relu4);
   dnn.add_layer(fc5);
   dnn.add_layer(softmax);
+  if (loadParamFromFile) {
+    // load parameters
+    std::vector<float> conv1Parameters = loadParametersFromFile("../parameters/conv1.txt");
+    std::vector<float> conv2Parameters = loadParametersFromFile("../parameters/conv2.txt");
+    std::vector<float> fc3Parameters = loadParametersFromFile("../parameters/fc3.txt");
+    std::vector<float> fc4Parameters = loadParametersFromFile("../parameters/fc4.txt");
+    std::vector<float> fc5Parameters = loadParametersFromFile("../parameters/fc5.txt");
+    std::cout << "conv1 paramters: " << conv1Parameters.size() << std::endl;
+    conv1->set_parameters(conv1Parameters);
+    std::cout << "conv2 paramters: " << conv2Parameters.size() << std::endl;
+    conv2->set_parameters(conv2Parameters);
+    std::cout << "fc3 paramters: " << fc3Parameters.size() << std::endl;
+    fc3->set_parameters(fc3Parameters);
+    std::cout << "fc4 paramters: " << fc4Parameters.size() << std::endl;
+    fc4->set_parameters(fc4Parameters);
+    std::cout << "fc5 paramters: " << fc5Parameters.size() << std::endl;
+    fc5->set_parameters(fc5Parameters);
+  }
 
   if (isTraining) {
     int n_train = dataset.train_data.cols();
@@ -114,23 +133,6 @@ int main(int argc, char *argv[]) {
       storeParametersToFile("../parameters/ep_"+std::to_string(epoch+1)+"_"+std::to_string(acc)+"_fc5.txt", fc5->get_parameters());
     }
   } else {
-    // load parameters
-    std::vector<float> conv1Parameters = loadParametersFromFile("../parameters/conv1.txt");
-    std::vector<float> conv2Parameters = loadParametersFromFile("../parameters/conv2.txt");
-    std::vector<float> fc3Parameters = loadParametersFromFile("../parameters/fc3.txt");
-    std::vector<float> fc4Parameters = loadParametersFromFile("../parameters/fc4.txt");
-    std::vector<float> fc5Parameters = loadParametersFromFile("../parameters/fc5.txt");
-    std::cout << "conv1 paramters: " << conv1Parameters.size() << std::endl;
-    conv1->set_parameters(conv1Parameters);
-    std::cout << "conv2 paramters: " << conv2Parameters.size() << std::endl;
-    conv2->set_parameters(conv2Parameters);
-    std::cout << "fc3 paramters: " << fc3Parameters.size() << std::endl;
-    fc3->set_parameters(fc3Parameters);
-    std::cout << "fc4 paramters: " << fc4Parameters.size() << std::endl;
-    fc4->set_parameters(fc4Parameters);
-    std::cout << "fc5 paramters: " << fc5Parameters.size() << std::endl;
-    fc5->set_parameters(fc5Parameters);
-
     // Test (Run forward)
     dnn.forward(dataset.test_data);
     float acc = compute_accuracy(dnn.output(), dataset.test_labels);
