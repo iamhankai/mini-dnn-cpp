@@ -23,17 +23,19 @@
 #include "src/network.h"
 #include "src/optimizer.h"
 #include "src/optimizer/sgd.h"
+//
+#include "src/parameter.h"
 
 #include "src/device/Util.h"
 
 int main() {
   printDeviceInfo();
 
-  // data
+  // Load Fashion MNIST dataset
   MNIST dataset("../data/mnist/");
   dataset.read();
 
-  // dnn
+  // Build Lenet5 model
   Network dnn;
   Layer* conv1 = new Conv(1, 28, 28, 6, 5, 5, 1, 0, 0);
   Layer* pool1 = new MaxPooling(6, 24, 24, 2, 2, 2);
@@ -60,7 +62,19 @@ int main() {
   dnn.add_layer(fc5);
   dnn.add_layer(softmax);
 
-  // test
+  // load parameters
+  std::vector<float> conv1Parameters = loadParametersFromFile("../parameters/conv1.txt");
+  std::vector<float> conv2Parameters = loadParametersFromFile("../parameters/conv2.txt");
+  std::vector<float> fc3Parameters = loadParametersFromFile("../parameters/fc3.txt");
+  std::vector<float> fc4Parameters = loadParametersFromFile("../parameters/fc4.txt");
+  std::vector<float> fc5Parameters = loadParametersFromFile("../parameters/fc5.txt");
+  conv1->set_parameters(conv1Parameters);
+  conv2->set_parameters(conv2Parameters);
+  fc3->set_parameters(fc3Parameters);
+  fc4->set_parameters(fc4Parameters);
+  fc5->set_parameters(fc5Parameters);
+
+  // Test (Run forward)
   dnn.forward(dataset.test_data);
   float acc = compute_accuracy(dnn.output(), dataset.test_labels);
   std::cout << std::endl;
