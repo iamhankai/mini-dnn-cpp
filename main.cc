@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
     // train & test
     SGD opt(0.001, 5e-4, 0.9, true);
     // SGD opt(0.001);
-    const int n_epoch = 5;
+    const int n_epoch = 10;
     const int batch_size = 128;
     for (int epoch = 0; epoch < n_epoch; epoch ++) {
       shuffle_data(dataset.train_data, dataset.train_labels);
