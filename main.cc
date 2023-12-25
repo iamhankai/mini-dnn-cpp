@@ -29,15 +29,6 @@
 #include "src/device/Util.h"
 
 int main(int argc, char *argv[]) {
-  Vector vec;
-  vec.resize(3);
-  vec(0) = 1;
-  vec(1) = 2;
-  vec(2) = 3;
-  for (int i = 0; i < 3; i++) {
-    std::cout << vec.data()[i] << std::endl;
-  }
-  return 0;
   printDeviceInfo();
 
   bool isTraining = (argc > 1 && (strcmp(argv[1], "train") == 0));
