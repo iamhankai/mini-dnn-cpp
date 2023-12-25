@@ -14,5 +14,5 @@ void dev_matrixColwiseAddVec(float *des, float *vec, int n, int m) {
 
 // des = (n, m) vec = (m)
 void dev_matrixRowwiseAddVec(float *des, float *vec, int n, int m) {
-  
+
 }

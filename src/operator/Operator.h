@@ -3,6 +3,7 @@
 
 #include <Eigen/Core>
 #include "../utils.h"
+#include "../device/Operator.h"
 
 Matrix matrixMul(const Matrix &A, const Matrix &B, bool usingDevice=false);
 void matrixColwiseAddVec(Matrix &des, const Vector &vec, bool usingDevice=false);
