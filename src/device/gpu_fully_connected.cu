@@ -54,7 +54,7 @@ __host__ void fc_on_gpu(float* in, float* weight, float* out, float* bias, int d
   CHECK(cudaMemcpy(d_bias, bias, sizeof(float) * dim_out, cudaMemcpyHostToDevice));
   //call kernel
   dim3 block_size(32, 32);
-  dim3 grid_size((n_samples + blockDim.x - 1) / blockDim.x, (dim_out + blockDim.y - 1) / blockDim.y);
+  dim3 grid_size((n_samples + block_size.x - 1) / block_size.x, (dim_out + block_size.y - 1) / block_size.y);
   fc_kernel<<<grid_size, block_size>>>(d_in, d_weight, d_out, d_bias, dim_in, dim_out, n_samples);
   //transfer data from device to host
   CHECK(cudaMemcpy(out, d_out, sizeof(float) * dim_out * n_samples, cudaMemcpyDeviceToHost));
