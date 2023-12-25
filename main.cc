@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
   for (int i = 0; i < 3; i++) {
     std::cout << vec.data()[i] << std::endl;
   }
-  return;
+  return 0;
   printDeviceInfo();
 
   bool isTraining = (argc > 1 && (strcmp(argv[1], "train") == 0));
