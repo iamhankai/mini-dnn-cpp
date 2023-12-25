@@ -1,4 +1,5 @@
 #include "./fully_connected.h"
+#include "../device/gpu_fully_connected.h"
 
 void FullyConnected::init() {
   weight.resize(dim_in, dim_out);
@@ -10,11 +11,14 @@ void FullyConnected::init() {
 }
 
 void FullyConnected::forward(const Matrix& bottom) {
+  //Host code
   // z = w' * x + b
   const int n_sample = bottom.cols();
   top.resize(dim_out, n_sample);
-  top = weight.transpose() * bottom;
-  top.colwise() += bias;
+  // top = weight.transpose() * bottom;
+  // top.colwise() += bias;
+  //Device code
+  fc_on_gpu(bottom.data(), weight.transpose().data(), top.data(), bias.data(), dim_in, dim_out, n_sample);
 }
 
 void FullyConnected::backward(const Matrix& bottom, const Matrix& grad_top) {
