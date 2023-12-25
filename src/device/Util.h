@@ -1,9 +1,9 @@
 #ifndef _UTIL_H_
 #define _UTIL_H_
 
+#include <cuda_runtime.h>
 #include <stdio.h>
 #include <stdint.h>
-#include <cuda_runtime.h>
 
 #define CHECK(call)\
 {\
