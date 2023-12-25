@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
   printDeviceInfo();
 
   bool isTraining = (argc > 1 && (strcmp(argv[1], "train") == 0));
-  bool loadParamFromFile = isTraining && (argc > 2 && (strcmp(argv[2], "param") == 0));
+  bool loadParamFromFile = (argc > 2 && (strcmp(argv[2], "param") == 0));
 
   // Load Fashion MNIST dataset
   MNIST dataset("../data/mnist/");
