@@ -13,8 +13,12 @@ void FullyConnected::forward(const Matrix& bottom) {
   // z = w' * x + b
   const int n_sample = bottom.cols();
   top.resize(dim_out, n_sample);
-  top = weight.transpose() * bottom;
-  top.colwise() += bias;
+
+  // top = weight.transpose() * bottom;
+  // top.colwise() += bias;
+
+  top = matrixMul(weight.transpose(), bottom);
+  matrixColwiseAdd(top, bias);
 }
 
 void FullyConnected::backward(const Matrix& bottom, const Matrix& grad_top) {
