@@ -8,7 +8,7 @@ Matrix matrixMul(const Matrix &A, const Matrix &B, bool usingDevice) {
   }
 }
 
-void matrixColwiseAddVec(const Matrix &des, const Vector &vec, bool usingDevice) {
+void matrixColwiseAddVec(Matrix &des, const Vector &vec, bool usingDevice) {
   if (usingDevice) {
 
   } else {
@@ -16,7 +16,7 @@ void matrixColwiseAddVec(const Matrix &des, const Vector &vec, bool usingDevice)
   }
 }
 
-void matrixRowwiseAddVec(const Matrix &des, const Vector &vec, bool usingDevice) {
+void matrixRowwiseAddVec(Matrix &des, const Vector &vec, bool usingDevice) {
   if (usingDevice) {
 
   } else {
