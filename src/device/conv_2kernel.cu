@@ -71,10 +71,10 @@ void Conv::forward(const Matrix& bottom, bool useDevice = false)
 			data_cols[i] = data_col;
 
 			// conv by product
-			// Matrix result = data_col * weight;  // result: (hw_out, channel_out)
-			// result.rowwise() += bias.transpose();
-			Matrix result = matrixMul(data_col, weight);
-			matrixRowwiseAddVec(result, bias);
+			Matrix result = data_col * weight;  // result: (hw_out, channel_out)
+			result.rowwise() += bias.transpose();
+			//Matrix result = matrixMul(data_col, weight);
+			//matrixRowwiseAddVec(result, bias);
 
 			top.col(i) = Eigen::Map<Vector>(result.data(), result.size());
 		}
