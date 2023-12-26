@@ -44,7 +44,7 @@ __global__ void im2col (float* input, float* data, int height_in, int width_in, 
 __global__ void convolution (float* data, float* weight, float* output, float* bias, int m, int n, int k)
 {
 	int i = blockIdx.y * blockDim.y + threadIdx.y;
-    int j = blockIdx.x * blockDim.x + threadIdx.x;
+    	int j = blockIdx.x * blockDim.x + threadIdx.x;
 	if (i < m && j < k)
 	{
 		float s = 0;
@@ -98,11 +98,11 @@ void Conv::forward(const Matrix& bottom, bool useDevice = false)
 			//Grid size and Block size
 			dim3 blockSize (32, 32); //default
 			dim3 gridSize((channel_out - 1) / blockSize.x + 1,
-						  (height_out * width_out - 1) / blockSize.y + 1);
+				      (height_out * width_out - 1) / blockSize.y + 1);
 			
 			im2col<<<gridSize, blockSize>>>(d_input, d_data, height_in, width_in, height_kernel, width_kernel, stride);
 			convolution<<<gridSize, blockSize>>>(d_data, d_weight, d_output, d_bias, height_out * width_out, 
-												 height_kernel * width_kernel * channel_in, channel_out);
+							     height_kernel * width_kernel * channel_in, channel_out);
 			
 			//TODO: Copy data from d_output to out
 			Vector out;
