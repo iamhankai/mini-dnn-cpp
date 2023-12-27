@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "../layer.h"
+#include "../operator/Operator.h"
 
 class FullyConnected : public Layer {
  private:
