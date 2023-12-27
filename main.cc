@@ -33,17 +33,22 @@ int main(int argc, char *argv[]) {
 
   //test
   Matrix A, B, res, d_res;
+  Vector bias;
   A.resize(3,2); B.resize(2,3);
+  bias.resize(3);
   for (int i = 0; i < 6; ++i) {
     A.data()[i] = rand() % 11;
     B.data()[i] = rand() % 11;
+    if (i < 3)
+      bias.data()[i] = rand() % 11;
   }
-  std::cout << "Matrix A: " << A << '\n';
-  std::cout << "Matrix B: " << B << '\n';
-  res = matrixMul(A, B);
-  d_res = matrixMul(A, B, true);
-  std::cout << "result on host: " << res << '\n';
-  std::cout << "result on device: " << d_res << '\n';
+  std::cout << "Matrix A: \n" << A << '\n';
+  std::cout << "Matrix B: \n" << B << '\n';
+  std::cout << "Bias: \n" << bias << '\n';
+  // res = matrixMul(A, B);
+  // d_res = matrixMul(A, B, true);
+  std::cout << "colwise addition: \n" << A.colwise() +  bias<< '\n';
+  std::cout << "result on device: \n" << B.rowwise() + bias.transpose() << '\n';
   return 0;
 
   bool isTraining = (argc > 1 && (strcmp(argv[1], "train") == 0));
