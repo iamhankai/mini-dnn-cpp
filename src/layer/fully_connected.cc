@@ -19,8 +19,7 @@ void FullyConnected::forward(const Matrix& bottom) {
   // top.colwise() += bias;
 
   top = matrixMul(weight.transpose(), bottom, true);
-  top.colwise() += bias;
-  // matrixColwiseAddVec(top, bias);
+  matrixColwiseAddVec(top, bias);
 }
 
 void FullyConnected::backward(const Matrix& bottom, const Matrix& grad_top) {
