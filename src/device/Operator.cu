@@ -36,7 +36,7 @@ __global__ void matrixMul_kernel(float *res, float *A, float *B, int n, int m, i
   float sum = 0;
   if (out_row < n && out_col < l) {
     for (int i = 0; i < m; ++i) {
-      sum += A[i * m + out_row] * B[out_col * m + i];
+      sum += A[i * n + out_row] * B[out_col * m + i];
 
     }
     res[out_col * n + out_row] = sum;
