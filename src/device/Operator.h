@@ -4,6 +4,9 @@
 #include <cuda_runtime.h>
 #include "Util.h"
 
+#define BLOCK_WIDTH 32
+#define BLOCK_HEIGHT 32
+
 // index = c*n_row + r
 
 // A = (n, m)   B = (m, l)

@@ -43,6 +43,21 @@ __global__ void matrixMul_kernel(float *res, float *A, float *B, int n, int m, i
   }
 }
 
+__global__ void matrixColwiseAddVec_kernel(float *des, float *vec, int n, int m) {
+  int out_row = blockIdx.y * blockDim.y + threadIdx.y;
+  int out_col = blockIdx.x * blockDim.x + threadIdx.x;
+  if (out_row < n && out_col < m) {
+    des[out_col * n + out_row] += vec[out_row];
+  }
+}
+
+__global__ void matrixRowwiseAddVec_kernel(float* des, float* vec, int n, int m) {
+  int out_row = blockIdx.y * blockDim.y + threadIdx.y;
+  int out_col = blockIdx.x * blockDim.x + threadIdx.x;
+  if (out_row < n && out_col < m) {
+    des[out_col * n + out_row] += vec[out_col];
+  }
+}
 void dev_matrixMul(float *res, float *A, float *B, int n, int m, int l) {
   size_t A_size = sizeof(float) * n * m;
   size_t B_size = sizeof(float) * m * l;
@@ -59,7 +74,7 @@ void dev_matrixMul(float *res, float *A, float *B, int n, int m, int l) {
   CHECK(cudaMemcpy(d_B, B, B_size, cudaMemcpyHostToDevice));
   //call kernel
   //default block size: 32 x 32
-  dim3 block_size(32, 32);
+  dim3 block_size(BLOCK_WIDTH, BLOCK_HEIGHT);
   dim3 grid_size((l + block_size.x - 1) / block_size.x, (n + block_size.y - 1) / block_size.y);
   tiled_matrixMul_kernel<<<grid_size, block_size, sizeof(float) * block_size.x * block_size.y>>>(d_res, d_A, d_B, n, m, l);
   // matrixMul_kernel<<<grid_size, block_size>>>(d_res, d_A, d_B, n, m, l);
@@ -73,10 +88,44 @@ void dev_matrixMul(float *res, float *A, float *B, int n, int m, int l) {
 
 // des = (n, m) vec = (n)
 void dev_matrixColwiseAddVec(float *des, float *vec, int n, int m) {
-
+  float* d_des = nullptr;
+  float* d_vec = nullptr;
+  //allocate dev memory
+  CHECK(cudaMalloc(&d_des, sizeof(float) * n * m));
+  CHECK(cudaMalloc(&d_vec, sizeof(float) * n));
+  //data transfer from host to device
+  CHECK(cudaMemcpy(d_des, des, sizeof(float) * n * m, cudaMemcpyHostToDevice));
+  CHECK(cudaMemcpy(d_vec, vec, sizeof(float) * n, cudaMemcpyHostToDevice));
+  //call kernel
+  //default block size: 32 x 32
+  dim3 block_size(BLOCK_WIDTH, BLOCK_HEIGHT);
+  dim3 grid_size((m + block_size.x -1) / block_size.x, (n + block_size.y - 1) / block_size.y);
+  matrixColwiseAddVec_kernel<<<grid_size, block_size>>>(d_des, d_vec, n , m);
+  //data transfer from device back to host
+  CHECK(cudaMemcpy(des, d_des, sizeof(float) * n * m, cudaMemcpyDeviceToHost));
+  //free dev memory
+  CHECK(cudaFree(d_des));
+  CHECK(cudaFree(d_vec));
 }
 
 // des = (n, m) vec = (m)
 void dev_matrixRowwiseAddVec(float *des, float *vec, int n, int m) {
-
+  float* d_des = nullptr;
+  float* d_vec = nullptr;
+  //allocate dev memory
+  CHECK(cudaMalloc(&d_des, sizeof(float) * n * m));
+  CHECK(cudaMalloc(&d_vec, sizeof(float) * m));
+  //data transfer from host to device
+  CHECK(cudaMemcpy(d_des, des, sizeof(float) * n * m, cudaMemcpyHostToDevice));
+  CHECK(cudaMemcpy(d_vec, vec, sizeof(float) * m, cudaMemcpyHostToDevice));
+  //call kernel
+  //default block size: 32 x 32
+  dim3 block_size(BLOCK_WIDTH, BLOCK_HEIGHT);
+  dim3 grid_size((m + block_size.x -1) / block_size.x, (n + block_size.y - 1) / block_size.y);
+  matrixColwiseAddVec_kernel<<<grid_size, block_size>>>(d_des, d_vec, n , m);
+  //data transfer from device back to host
+  CHECK(cudaMemcpy(des, d_des, sizeof(float) * n * m, cudaMemcpyDeviceToHost));
+  //free dev memory
+  CHECK(cudaFree(d_des));
+  CHECK(cudaFree(d_vec));
 }
