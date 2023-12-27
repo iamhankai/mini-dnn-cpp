@@ -61,8 +61,8 @@ void dev_matrixMul(float *res, float *A, float *B, int n, int m, int l) {
   //default block size: 32 x 32
   dim3 block_size(32, 32);
   dim3 grid_size((l + block_size.x - 1) / block_size.x, (n + block_size.y - 1) / block_size.y);
-  // tiled_matrixMul_kernel<<<grid_size, block_size, sizeof(float) * block_size.x * block_size.y>>>(d_res, d_A, d_B, n, m, l);
-  matrixMul_kernel<<<grid_size, block_size>>>(d_res, d_A, d_B, n, m, l);
+  tiled_matrixMul_kernel<<<grid_size, block_size, sizeof(float) * block_size.x * block_size.y>>>(d_res, d_A, d_B, n, m, l);
+  // matrixMul_kernel<<<grid_size, block_size>>>(d_res, d_A, d_B, n, m, l);
   //data transfer from device back to host
   CHECK(cudaMemcpy(res, d_res, res_size, cudaMemcpyDeviceToHost));
   //free dev memory
