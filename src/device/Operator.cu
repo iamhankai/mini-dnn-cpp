@@ -10,17 +10,17 @@ __global__ void tiled_matrixMul_kernel(float *res, float *A, float *B, int n, in
   int out_row = blockDim.y * blockIdx.y + threadIdx.y;
   int out_col = blockDim.x * blockIdx.x + threadIdx.x;
   float sum = 0;
-  for (int i = 0; i < l / blockDim.x; ++i) {
+  for (int i = 0; i < (l + blockDim.x - 1) / blockDim.x; ++i) {
     int weight_idx = (i * blockDim.x + threadIdx.x) * n + out_row;
     int in_idx = out_col * m + i * blockDim.y + threadIdx.y;
     if (weight_idx < m * n)
       tile1[threadIdx.y * blockDim.x + threadIdx.x] = A[weight_idx];
     else
-      tile1[threadIdx.y * blockDim.x + threadIdx.x] = -1;
+      tile1[threadIdx.y * blockDim.x + threadIdx.x] = 0;
     if (in_idx < m * l)
       tile2[threadIdx.y * blockDim.x + threadIdx.x] = B[in_idx];
     else
-      tile2[threadIdx.y * blockDim.x + threadIdx.x] = -1;
+      tile2[threadIdx.y * blockDim.x + threadIdx.x] = 0;
     for (int j = 0; j < blockDim.x; ++j) {
       sum += tile1[threadIdx.y * blockDim.x + j] * tile2[j * blockDim.x + threadIdx.x];
     }
