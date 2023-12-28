@@ -21,9 +21,12 @@ __global__ void tiled_matrixMul_kernel(float *res, float *A, float *B, int n, in
       tile2[threadIdx.y * blockDim.x + threadIdx.x] = B[in_idx];
     else
       tile2[threadIdx.y * blockDim.x + threadIdx.x] = 0;
+    //waiting until all cells in SMEM are assigned
+    __syncthreads();
     for (int j = 0; j < blockDim.x; ++j) {
       sum += tile1[threadIdx.y * blockDim.x + j] * tile2[j * blockDim.x + threadIdx.x];
     }
+    //waiting until all values in SMEM are processed
     __syncthreads();
   }
   if (out_row < n && out_col < l)
