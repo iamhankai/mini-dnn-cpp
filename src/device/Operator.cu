@@ -5,8 +5,8 @@
 // A = (n, m)   B = (m, l)
 //tiled matrix multiplication
 __global__ void tiled_matrixMul_kernel(float *res, float *A, float *B, int n, int m, int l) {
-  extern __shared__ float tile1[];
-  extern __shared__ float tile2[];
+  __shared__ float tile1[BLOCK_WIDTH * BLOCK_HEIGHT];
+  __shared__ float tile2[BLOCK_WIDTH * BLOCK_HEIGHT];
   int out_row = blockDim.y * blockIdx.y + threadIdx.y;
   int out_col = blockDim.x * blockIdx.x + threadIdx.x;
   float sum = 0;
@@ -16,11 +16,11 @@ __global__ void tiled_matrixMul_kernel(float *res, float *A, float *B, int n, in
     if (weight_idx < m * n)
       tile1[threadIdx.y * blockDim.x + threadIdx.x] = A[weight_idx];
     else
-      tile1[threadIdx.y * blockDim.x + threadIdx.x] = 0;
+      tile1[threadIdx.y * blockDim.x + threadIdx.x] = -1;
     if (in_idx < m * l)
       tile2[threadIdx.y * blockDim.x + threadIdx.x] = B[in_idx];
     else
-      tile2[threadIdx.y * blockDim.x + threadIdx.x] = 0;
+      tile2[threadIdx.y * blockDim.x + threadIdx.x] = -1;
     for (int j = 0; j < blockDim.x; ++j) {
       sum += tile1[threadIdx.y * blockDim.x + j] * tile2[j * blockDim.x + threadIdx.x];
     }
@@ -76,8 +76,8 @@ void dev_matrixMul(float *res, float *A, float *B, int n, int m, int l) {
   //default block size: 32 x 32
   dim3 block_size(BLOCK_WIDTH, BLOCK_HEIGHT);
   dim3 grid_size((l + block_size.x - 1) / block_size.x, (n + block_size.y - 1) / block_size.y);
-  // tiled_matrixMul_kernel<<<grid_size, block_size, sizeof(float) * block_size.x * block_size.y>>>(d_res, d_A, d_B, n, m, l);
-  matrixMul_kernel<<<grid_size, block_size>>>(d_res, d_A, d_B, n, m, l);
+  tiled_matrixMul_kernel<<<grid_size, block_size>>>(d_res, d_A, d_B, n, m, l);
+  // matrixMul_kernel<<<grid_size, block_size>>>(d_res, d_A, d_B, n, m, l);
   //data transfer from device back to host
   CHECK(cudaMemcpy(res, d_res, res_size, cudaMemcpyDeviceToHost));
   //free dev memory

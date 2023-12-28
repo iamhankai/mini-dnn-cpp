@@ -31,6 +31,21 @@
 int main(int argc, char *argv[]) {
   printDeviceInfo();
   
+  //test
+  Matrix A, B, res, d_res;
+  A.resize(3,2); B.resize(2,3);
+  for (int i = 0; i < 6; ++i) {
+    A.data()[i] = rand() % 11;
+    B.data()[i] = rand() % 11;
+  }
+  std::cout << "Matrix A:\n" << A << '\n';
+  std::cout << "Matrix B:\n" << B << '\n';
+  res = matrixMul(A,B);
+  d_res = matrixMul(A,B,true);
+  std::cout << "result on host:\n" << res << '\n';
+  std::cout << "result on device:\n" << d_res << '\n';
+  return 0;
+
   bool isTraining = (argc > 1 && (strcmp(argv[1], "train") == 0));
   bool loadParamFromFile = (argc > 2 && (strcmp(argv[2], "param") == 0));
 
