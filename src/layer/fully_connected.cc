@@ -1,5 +1,4 @@
 #include "./fully_connected.h"
-#include "../device/gpu_fully_connected.h"
 
 void FullyConnected::init() {
   weight.resize(dim_in, dim_out);
