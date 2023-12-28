@@ -56,10 +56,57 @@ __global__ void convolution (float* data, float* weight, float* output, float* b
 		{
 			s += data[i * n + p] * weight[p * k + j];
 		}
-		out[i * k + j] = s + bias(j);
+		output[i * k + j] = s + bias(j);
+	        // output[i * k + j] = s;
 	}
 }
 
+__global__ void convolution_kernel2 (float* data, float* weight, float* output, float* bias, int m, int n, int k)
+{
+	__shared__ float s_data[TILE_WIDTH][TILE_WIDTH];    //BLOCK HEIGHT, BLOCK WIDTH
+	__shared__ float s_weight[TILE_WIDTH][TILE_WIDTH];  //BLOCK HEIGHT, BLOCK WIDTH
+	
+	int i = blockIdx.y * blockDim.y + threadIdx.y;
+    int j = blockIdx.x * blockDim.x + threadIdx.x;
+	int tx = threadIdx.x;
+	int ty = threadIdx.y;
+	float s = 0;
+	
+	for (int t = 0; t < (n - 1) / TILE_WIDTH + 1; t++)
+	{
+		if (i < m && t * TILE_WIDTH + tx < n)
+		{
+			s_data[ty][tx] = data[i * n + t * TILE_WIDTH + tx];
+		}
+		else
+		{
+			s_data[ty][tx] = 0;
+		}
+		
+		if (t * TILE_WIDTH + ty < n && j < k)
+		{
+			s_weight[ty][tx] = weight[(t * TILE_WIDTH + ty) * k + j];
+		}
+		else
+		{
+			s_weight[ty][tx] = 0;
+		}
+		__syncthreads();
+		
+		
+		for (int p = 0; p < TILE_WIDTH; p++)
+		{
+			s+= s_data[ty][p] * s_weight[p][tx];
+		}
+		__syncthreads();
+	}	
+		
+	if (i < m && j < k)
+	{
+		output[i * k + j] = s + bias(j);
+		// output[i * k + j] = s;
+	}
+}
 void Conv::forward(const Matrix& bottom, bool useDevice = false) 
 {
 	int n_sample = bottom.cols();
